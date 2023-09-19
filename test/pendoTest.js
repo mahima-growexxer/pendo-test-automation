@@ -1,125 +1,86 @@
 /* eslint-disable indent */
 
-const { Builder, By, Key } = require('selenium-webdriver')
+const { Builder, By, Key, until } = require('selenium-webdriver')
+require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` })
 
 const example = async () => {
     // launch the browser
     const driver = await new Builder().forBrowser('firefox').build()
 
     // add endpoint to test
-    await driver.get('http://pendo.development')
+    const hostname = process.env.HOSTNAME
+    await driver.get(`${hostname}/sign-in`)
+
+    // wait until the element is completely loaded
+    const waitFind = (locator) => {
+        return driver.findElement(async () => {
+            await driver.wait(until.elementLocated(locator))
+            return driver.findElement(locator)
+        })
+    }
 
     // add test
 
     // key enter will submit the form, alternatively button click can also work
-    await driver.findElement(By.name('email')).sendKeys('mahima.gajiwala@growexx.com')
-    await driver.findElement(By.name('password')).sendKeys('Test@123', Key.RETURN)
 
-    // wait until page is fully loaded
-    await driver.manage().setTimeouts({
-        implicit: 5000,
-        pageLoad:
-            5000,
-        script: 5000
-    })
+    // login
+    await driver.findElement(By.name('email')).sendKeys(process.env.EMAIL)
+    await driver.findElement(By.name('password')).sendKeys(process.env.PASSWORD, Key.RETURN)
 
-    // await driver.findElement(By.xpath('/html/body/div[2]/div[2]/div/div/ul/li/div/div/div/a')).click()
+    // list view
+    // await waitFind(By.xpath('/html/body/div[2]/div[2]/div/div/ul/li/div/div[1]/ul')).click()
 
-    // await driver.findElement(By.xpath('//*[@id="region-wizard-content"]/div[2]/span/span[1]/span/span[2]')).click()
+    // opens property
+    await waitFind(By.xpath('/html/body/div[2]/div[2]/div/div/ul/li/div/ul/li[1]/div[1]/p[1]/a')).click()
 
-    // lease section
-    await driver.findElement(By.xpath('/html/body/div[2]/div[2]/div/ul/li[2]')).click()
+    // opens units list
+    await waitFind(By.xpath('/html/body/div[2]/div[2]/article/div[1]/div[2]/div[1]/div/ul[2]/li[1]')).click()
 
-    // units section
-    await driver.findElement(By.xpath('/html/body/div[2]/div[2]/div/div/ul/li[3]')).click()
-
-    await driver.manage().setTimeouts({
-        implicit: 5000,
-        pageLoad:
-            5000,
-        script: 5000
-    })
+    // opens unit
+    await waitFind(By.xpath('/html/body/div[2]/div[4]/div/table/tbody/tr[1]/td[1]/div[2]/a')).click()
 
     // people section
-    await driver.findElement(By.xpath('//*[@id="region-header"]/header/div/nav/ul/li[3]')).click()
+    await waitFind(By.xpath('//*[@id="region-header"]/header/div/nav/ul/li[3]')).click()
 
-    await driver.manage().setTimeouts({
-        implicit: 5000,
-        pageLoad:
-            5000,
-        script: 5000
-    })
+    await waitFind(By.xpath('/html/body/div[2]/div[2]/div/div/div/a')).click()
 
-    // payments section
-    await driver.findElement(By.xpath('//*[@id="region-header"]/header/div/nav/ul/li[4]')).click()
+    await waitFind(By.xpath('/html/body/div[2]/div[2]/form/div[2]/div[2]/div')).click()
 
-    await driver.manage().setTimeouts({
-        implicit: 5000,
-        pageLoad:
-            5000,
-        script: 5000
-    })
-    // performance section
-    // await driver.findElement(By.xpath('//*[@id="region-header"]/header/div/nav/ul/li[5]')).click()
+    await waitFind(By.xpath('/html/body/div[2]/div[2]/form/div[2]/div[2]/div/span[2]/span/span[2]/ul/li[1]')).click()
 
-    await driver.manage().setTimeouts({
-        implicit: 5000,
-        pageLoad:
-            5000,
-        script: 5000
-    })
+    await waitFind(By.xpath('/html/body/div[2]/div[2]/form/div[2]/div[4]/div[3]/input')).sendKeys('Mahima')
 
-    // settings section
-    // profile
-    await driver.findElement(By.xpath('//*[@id="region-header"]/header/div/ul/li[3]')).click()
+    await waitFind(By.xpath('/html/body/div[2]/div[2]/form/div[2]/div[4]/div[6]/input')).sendKeys(`mahima${Date.now()}@test.com`, Key.RETURN)
 
-    await driver.manage().setTimeouts({
-        implicit: 5000,
-        pageLoad:
-            5000,
-        script: 5000
-    })
-    // password
-    await driver.findElement(By.xpath('/html/body/div[2]/div[2]/div/div/ul/li[2]')).click()
+    // // home section
+    await waitFind(By.xpath('/html/body/div[2]/div[1]/header/div/nav/ul/li[1]/a')).click()
 
-    await driver.manage().setTimeouts({
-        implicit: 5000,
-        pageLoad:
-            5000,
-        script: 5000
-    })
-    // accounting
-    await driver.findElement(By.xpath('/html/body/div[2]/div[2]/div/div/ul/li[3]')).click()
+    // // performance section
+    // await waitFind(By.xpath('//*[@id="region-header"]/header/div/nav/ul/li[5]')).click()
 
-    await driver.manage().setTimeouts({
-        implicit: 5000,
-        pageLoad:
-            5000,
-        script: 5000
-    })
-    // plan
-    await driver.findElement(By.xpath('/html/body/div[2]/div[2]/div/div/ul/li[4]')).click()
+    // // settings section
+    // await waitFind(By.xpath('//*[@id="region-header"]/header/div/ul/li[3]')).click().then(async () => {
+    //     // settings -> password
+    //     // await waitFind(By.xpath('/html/body/div[2]/div[2]/div/div/ul/li[2]')).click()
 
-    await driver.manage().setTimeouts({
-        implicit: 5000,
-        pageLoad:
-            5000,
-        script: 5000
-    })
-    // pendopay
-    await driver.findElement(By.xpath('/html/body/div[2]/div[2]/div/div/ul/li[5]')).click()
+    //     // // settings -> accounting
+    //     // await waitFind(By.xpath('//*[@id="region-content"]/div/div/ul/li[3]')).click()
 
-    await driver.manage().setTimeouts({
-        implicit: 5000,
-        pageLoad:
-            5000,
-        script: 5000
-    })
-    // users
-    await driver.findElement(By.xpath('/html/body/div[2]/div[2]/div/div/ul/li[6]')).click()
+    //     // // settings -> plan
+    //     // await waitFind(By.xpath('//*[@id="region-content"]/div/div/ul/li[4]')).click()
 
-    // close the browser
-    await driver.quit()
+    //     // // settings -> pendopay
+    //     // await waitFind(By.xpath('//*[@id="region-content"]/div/div/ul/li[5]')).click()
+
+    //     // // settings -> users
+    //     // await waitFind(By.xpath('//*[@id="region-content"]/div/div/ul/li[6]')).click()
+    // })
+
+    // sign out
+    // await waitFind(By.xpath('/html/body/div[2]/div[1]/header/div/ul/li[4]')).click()
+
+    // // close the browser
+    // await driver.quit()
 }
 
 example()
